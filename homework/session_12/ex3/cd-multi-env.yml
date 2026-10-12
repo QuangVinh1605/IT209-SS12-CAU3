@@ -1,0 +1,66 @@
+name: Multi-Environment CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://api.staging.example.com
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Simulate Deployment to Staging
+        run: |
+          echo "=========================================================="
+          echo "🚀 STARTING DEPLOYMENT TO STAGING ENVIRONMENT"
+          echo "=========================================================="
+          echo "Target Environment : staging"
+          echo "Target URL         : https://api.staging.example.com"
+          echo "Branch             : ${{ github.ref_name }}"
+          echo "Commit SHA         : ${{ github.sha }}"
+          echo "Triggered By       : ${{ github.actor }}"
+          echo "Protection Rule    : None (Auto Deployment Enabled)"
+          echo "=========================================================="
+          echo "Deploying application artifacts to Staging..."
+          sleep 5
+          echo "✅ Staging Deployment Completed Successfully!"
+          echo "=========================================================="
+
+  deploy-prod:
+    name: Deploy to Production
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://api.prod.example.com
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Simulate Deployment to Production
+        run: |
+          echo "=========================================================="
+          echo "🚀 STARTING DEPLOYMENT TO PRODUCTION ENVIRONMENT"
+          echo "=========================================================="
+          echo "Target Environment : production"
+          echo "Target URL         : https://api.prod.example.com"
+          echo "Branch             : ${{ github.ref_name }}"
+          echo "Commit SHA         : ${{ github.sha }}"
+          echo "Triggered By       : ${{ github.actor }}"
+          echo "Protection Rule    : Required Reviewers (Manual Approval)"
+          echo "Gate Check Status  : APPROVED by Authorized Reviewer"
+          echo "=========================================================="
+          echo "Deploying application artifacts to Production..."
+          sleep 5
+          echo "✅ Production Deployment Completed Successfully!"
+          echo "=========================================================="
